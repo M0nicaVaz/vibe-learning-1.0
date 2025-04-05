@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Navigate, useNavigate, Link } from 'react-router-dom';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { UserData, WordEntry } from '../types';
 import { trashOutline, addOutline, pencilOutline } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
@@ -704,20 +704,6 @@ export default function Dashboard({
             onCancel={handleDeleteCancel}
           />
         )}
-
-        <div className="mt-8">
-          <Link
-            to="/new-dictionary"
-            className={`px-4 py-2 rounded-md flex items-center ${
-              theme === 'dark'
-                ? 'bg-teal-400 text-black hover:bg-teal-500'
-                : 'bg-teal-600 text-white hover:bg-teal-700'
-            }`}
-          >
-            <IonIcon icon={addOutline} className="mr-2" />
-            Criar Novo Dicionário
-          </Link>
-        </div>
       </div>
     </div>
   );
