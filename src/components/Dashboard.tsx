@@ -155,6 +155,7 @@ export default function Dashboard({
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingWord, setEditingWord] = useState<WordEntry | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchBy, setSearchBy] = useState<'word' | 'translation'>('word');
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [wordToDelete, setWordToDelete] = useState<WordEntry | null>(null);
   const [formData, setFormData] = useState({
@@ -233,9 +234,14 @@ export default function Dashboard({
     navigate('/');
   };
 
-  const filteredWords = dictionary.words.filter((word) =>
-    word.word.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredWords = dictionary.words.filter((word) => {
+    const searchLower = searchTerm.toLowerCase();
+    if (searchBy === 'word') {
+      return word.word.toLowerCase().includes(searchLower);
+    } else {
+      return word.translation.toLowerCase().includes(searchLower);
+    }
+  });
 
   return (
     <div
@@ -346,32 +352,58 @@ export default function Dashboard({
         </div>
 
         {/* Search Bar */}
-        <div className="relative mb-8">
-          <input
-            type="text"
-            placeholder="Buscar palavra..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={`w-full px-4 py-3 ${
-              theme === 'dark'
-                ? 'bg-[#2a2a2a] text-white border-gray-700'
-                : 'bg-white text-gray-900 border-gray-300'
-            } rounded-lg focus:outline-none focus:ring-2 ${
-              theme === 'dark' ? 'focus:ring-teal-400' : 'focus:ring-teal-500'
-            }`}
-          />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${
-                theme === 'dark'
-                  ? 'text-gray-400 hover:text-white'
-                  : 'text-gray-400 hover:text-gray-700'
-              }`}
-            >
-              ×
-            </button>
-          )}
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="flex-1">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder={`Buscar por ${
+                  searchBy === 'word' ? 'palavra' : 'tradução'
+                }...`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={`w-full px-4 py-3 ${
+                  theme === 'dark'
+                    ? 'bg-[#2a2a2a] text-gray-200 border-gray-700'
+                    : 'bg-white text-gray-900 border-gray-300'
+                } rounded-lg focus:outline-none focus:ring-2 ${
+                  theme === 'dark'
+                    ? 'focus:ring-teal-400'
+                    : 'focus:ring-teal-500'
+                }`}
+              />
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center">
+                <button
+                  onClick={() => setSearchBy('word')}
+                  className={`px-3 py-1.5 text-sm rounded-l ${
+                    searchBy === 'word'
+                      ? theme === 'dark'
+                        ? 'bg-teal-400 text-black'
+                        : 'bg-teal-600 text-white'
+                      : theme === 'dark'
+                      ? 'bg-gray-700 text-gray-300'
+                      : 'bg-gray-200 text-gray-600'
+                  }`}
+                >
+                  Palavra
+                </button>
+                <button
+                  onClick={() => setSearchBy('translation')}
+                  className={`px-3 py-1.5 text-sm rounded-r ${
+                    searchBy === 'translation'
+                      ? theme === 'dark'
+                        ? 'bg-teal-400 text-black'
+                        : 'bg-teal-600 text-white'
+                      : theme === 'dark'
+                      ? 'bg-gray-700 text-gray-300'
+                      : 'bg-gray-200 text-gray-600'
+                  }`}
+                >
+                  Tradução
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Word List */}
