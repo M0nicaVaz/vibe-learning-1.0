@@ -9,6 +9,22 @@ import {
 import { IonIcon } from '@ionic/react';
 import { useTheme } from '../context/ThemeContext';
 
+// Language mapping for flags and codes
+const LANGUAGE_MAP: Record<string, { code: string; flag: string }> = {
+  Português: { code: 'PT', flag: '🇧🇷' },
+  Inglês: { code: 'EN', flag: '🇬🇧' },
+  Espanhol: { code: 'ES', flag: '🇪🇸' },
+  Francês: { code: 'FR', flag: '🇫🇷' },
+  Alemão: { code: 'DE', flag: '🇩🇪' },
+  Italiano: { code: 'IT', flag: '🇮🇹' },
+  Japonês: { code: 'JP', flag: '🇯🇵' },
+  Coreano: { code: 'KR', flag: '🇰🇷' },
+  Chinês: { code: 'CN', flag: '🇨🇳' },
+  Russo: { code: 'RU', flag: '🇷🇺' },
+  Árabe: { code: 'AR', flag: '🇸🇦' },
+  Hindi: { code: 'HI', flag: '🇮🇳' },
+};
+
 interface FlashcardProps {
   userData: UserData;
 }
@@ -113,11 +129,12 @@ export default function Flashcard({ userData }: FlashcardProps) {
             </button>
             <h1
               className={`text-xl font-bold ${
-                theme === 'dark' ? 'text-teal-400' : 'text-teal-600'
+                theme === 'dark' ? 'text-gray-200' : 'text-teal-600'
               }`}
             >
-              Flashcards: {dictionary.sourceLanguage} →{' '}
-              {dictionary.targetLanguage}
+              {dictionary && LANGUAGE_MAP[dictionary.sourceLanguage]?.flag}{' '}
+              {dictionary.sourceLanguage} → {dictionary.targetLanguage}{' '}
+              {dictionary && LANGUAGE_MAP[dictionary.targetLanguage]?.flag}
             </h1>
           </div>
           <div className="flex items-center">
@@ -179,6 +196,10 @@ export default function Flashcard({ userData }: FlashcardProps) {
                   } shadow-lg`}
                 >
                   <div className="flex flex-col items-center">
+                    <div className="text-4xl mb-4">
+                      {dictionary &&
+                        LANGUAGE_MAP[dictionary.targetLanguage]?.flag}
+                    </div>
                     <div className="text-2xl font-medium mb-2">
                       {words[currentIndex]?.word ||
                         'Nenhuma palavra disponível'}
@@ -201,9 +222,15 @@ export default function Flashcard({ userData }: FlashcardProps) {
                       : 'bg-white text-gray-800'
                   } shadow-lg`}
                 >
-                  <div className="text-2xl font-medium">
-                    {words[currentIndex]?.translation ||
-                      'Nenhuma tradução disponível'}
+                  <div className="flex flex-col items-center">
+                    <div className="text-4xl mb-4">
+                      {dictionary &&
+                        LANGUAGE_MAP[dictionary.sourceLanguage]?.flag}
+                    </div>
+                    <div className="text-2xl font-medium">
+                      {words[currentIndex]?.translation ||
+                        'Nenhuma tradução disponível'}
+                    </div>
                   </div>
                 </div>
               </div>
