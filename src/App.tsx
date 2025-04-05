@@ -11,6 +11,7 @@ import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import NewDictionary from './components/NewDictionary';
 import Welcome from './components/Welcome';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   const [userData, setUserData] = useState<UserData | null>(() => {
@@ -60,45 +61,51 @@ function App() {
   };
 
   if (!userData) {
-    return <Welcome onUserDataSave={handleUserDataSave} />;
+    return (
+      <ThemeProvider>
+        <Welcome onUserDataSave={handleUserDataSave} />
+      </ThemeProvider>
+    );
   }
 
   return (
-    <Router>
-      <Layout userData={userData}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home
-                userData={userData}
-                onDictionaryDelete={handleDictionaryDelete}
-              />
-            }
-          />
-          <Route
-            path="/dictionary/:id"
-            element={
-              <Dashboard
-                userData={userData}
-                onWordsUpdate={handleWordUpdate}
-                onDictionaryDelete={handleDictionaryDelete}
-              />
-            }
-          />
-          <Route
-            path="/new-dictionary"
-            element={
-              <NewDictionary
-                onSave={handleDictionarySave}
-                userData={userData}
-              />
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <Layout userData={userData}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home
+                  userData={userData}
+                  onDictionaryDelete={handleDictionaryDelete}
+                />
+              }
+            />
+            <Route
+              path="/dictionary/:id"
+              element={
+                <Dashboard
+                  userData={userData}
+                  onWordsUpdate={handleWordUpdate}
+                  onDictionaryDelete={handleDictionaryDelete}
+                />
+              }
+            />
+            <Route
+              path="/new-dictionary"
+              element={
+                <NewDictionary
+                  onSave={handleDictionarySave}
+                  userData={userData}
+                />
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </ThemeProvider>
   );
 }
 

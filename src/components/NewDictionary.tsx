@@ -1,152 +1,180 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Dictionary, UserData } from '../types';
+import { useNavigate, Link } from 'react-router-dom';
+import { Dictionary } from '../types';
+import { useTheme } from '../context/ThemeContext';
+
+// Language mapping for flags and codes
+const LANGUAGE_MAP: Record<string, { code: string; flag: string }> = {
+  Português: { code: 'PT', flag: '🇧🇷' },
+  Inglês: { code: 'EN', flag: '🇬🇧' },
+  Espanhol: { code: 'ES', flag: '🇪🇸' },
+  Francês: { code: 'FR', flag: '🇫🇷' },
+  Alemão: { code: 'DE', flag: '🇩🇪' },
+  Italiano: { code: 'IT', flag: '🇮🇹' },
+  Japonês: { code: 'JP', flag: '🇯🇵' },
+  Coreano: { code: 'KR', flag: '🇰🇷' },
+  Chinês: { code: 'CN', flag: '🇨🇳' },
+  Russo: { code: 'RU', flag: '🇷🇺' },
+  Árabe: { code: 'AR', flag: '🇸🇦' },
+  Hindi: { code: 'HI', flag: '🇮🇳' },
+};
 
 interface NewDictionaryProps {
-  onSave: (dictionary: Dictionary) => void;
-  userData: UserData;
+  onDictionaryCreate: (dictionary: Dictionary) => void;
+  userData: {
+    dictionaries: Dictionary[];
+  };
 }
 
-const COMMON_LANGUAGES = [
-  { code: 'pt', name: 'Português' },
-  { code: 'en', name: 'Inglês' },
-  { code: 'es', name: 'Espanhol' },
-  { code: 'fr', name: 'Francês' },
-  { code: 'de', name: 'Alemão' },
-  { code: 'it', name: 'Italiano' },
-  { code: 'ja', name: 'Japonês' },
-  { code: 'ko', name: 'Coreano' },
-  { code: 'zh', name: 'Chinês' },
-  { code: 'ru', name: 'Russo' },
-  { code: 'ar', name: 'Árabe' },
-  { code: 'hi', name: 'Hindi' },
-] as const;
-
 export default function NewDictionary({
-  onSave,
+  onDictionaryCreate,
   userData,
 }: NewDictionaryProps) {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    sourceLanguage: '',
-    targetLanguage: '',
-  });
-  const [error, setError] = useState<string | null>(null);
+  const [sourceLanguage, setSourceLanguage] = useState('');
+  const [targetLanguage, setTargetLanguage] = useState('');
+  const [error, setError] = useState('');
+  const { theme } = useTheme();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.sourceLanguage || !formData.targetLanguage) return;
+    setError('');
 
-    const sourceName = COMMON_LANGUAGES.find(
-      (lang) => lang.code === formData.sourceLanguage
-    )?.name;
-    const targetName = COMMON_LANGUAGES.find(
-      (lang) => lang.code === formData.targetLanguage
-    )?.name;
-
-    if (!sourceName || !targetName) return;
-
-    // Check if a dictionary with these languages already exists
+    // Check if a dictionary with the same language pair already exists
     const existingDictionary = userData.dictionaries.find(
       (dict) =>
-        (dict.sourceLanguage === sourceName &&
-          dict.targetLanguage === targetName) ||
-        (dict.sourceLanguage === targetName &&
-          dict.targetLanguage === sourceName)
+        (dict.sourceLanguage === sourceLanguage &&
+          dict.targetLanguage === targetLanguage) ||
+        (dict.sourceLanguage === targetLanguage &&
+          dict.targetLanguage === sourceLanguage)
     );
 
     if (existingDictionary) {
-      setError('Você já tem um dicionário com esses idiomas');
+      setError(
+        'Já existe um dicionário com este par de idiomas. Por favor, escolha outro par.'
+      );
+      return;
+    }
+
+    if (sourceLanguage === targetLanguage) {
+      setError('Os idiomas de origem e destino não podem ser iguais.');
       return;
     }
 
     const newDictionary: Dictionary = {
       id: Date.now().toString(),
-      sourceLanguage: sourceName,
-      targetLanguage: targetName,
+      sourceLanguage,
+      targetLanguage,
       words: [],
     };
 
-    onSave(newDictionary);
-    navigate(`/dictionary/${newDictionary.id}`);
+    onDictionaryCreate(newDictionary);
+    navigate('/');
   };
 
   return (
-    <div className="min-h-screen p-4 bg-[#212121]">
-      <div className="max-w-xl mx-auto">
-        <div className="bg-[#2a2a2a] p-6 rounded-lg border border-gray-700">
-          <h1 className="text-2xl font-bold text-[#4DE082] mb-6">
-            Novo Dicionário
+    <div
+      className={`min-h-screen p-4 ${
+        theme === 'dark' ? 'bg-[#212121]' : 'bg-gray-50'
+      }`}
+    >
+      <div className="max-w-2xl mx-auto">
+        <div
+          className={`${
+            theme === 'dark' ? 'bg-[#2a2a2a]' : 'bg-white'
+          } p-6 rounded-lg border ${
+            theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+          }`}
+        >
+          <h1
+            className={`text-2xl font-bold mb-6 ${
+              theme === 'dark' ? 'text-[#4DE082]' : 'text-teal-600'
+            }`}
+          >
+            Criar Novo Dicionário
           </h1>
+
+          {error && (
+            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="p-4 bg-red-900/20 border border-red-500/50 rounded-md">
-                <p className="text-red-400 text-sm">{error}</p>
-              </div>
-            )}
-            <div>
+            <div className="mb-4">
               <label
                 htmlFor="sourceLanguage"
-                className="block text-sm font-medium text-gray-300 mb-2"
+                className={`block text-sm font-medium mb-1 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                }`}
               >
                 Idioma de Origem
               </label>
               <select
                 id="sourceLanguage"
-                required
-                className="w-full px-4 py-2 bg-[#333] border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#4DE082] focus:border-transparent"
-                value={formData.sourceLanguage}
-                onChange={(e) => {
-                  setFormData({ ...formData, sourceLanguage: e.target.value });
-                  setError(null);
-                }}
+                value={sourceLanguage}
+                onChange={(e) => setSourceLanguage(e.target.value)}
+                className={`w-full px-3 py-2 rounded-md border ${
+                  theme === 'dark'
+                    ? 'bg-gray-800 border-gray-700 text-gray-300'
+                    : 'bg-white border-gray-300 text-gray-600'
+                } focus:outline-none focus:ring-2 focus:ring-teal-500`}
               >
                 <option value="">Selecione o idioma</option>
-                {COMMON_LANGUAGES.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.name}
+                {Object.keys(LANGUAGE_MAP).map((lang) => (
+                  <option key={lang} value={lang}>
+                    {LANGUAGE_MAP[lang].flag} {lang}
                   </option>
                 ))}
               </select>
             </div>
-            <div>
+
+            <div className="mb-4">
               <label
                 htmlFor="targetLanguage"
-                className="block text-sm font-medium text-gray-300 mb-2"
+                className={`block text-sm font-medium mb-1 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                }`}
               >
                 Idioma de Destino
               </label>
               <select
                 id="targetLanguage"
-                required
-                className="w-full px-4 py-2 bg-[#333] border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#4DE082] focus:border-transparent"
-                value={formData.targetLanguage}
-                onChange={(e) => {
-                  setFormData({ ...formData, targetLanguage: e.target.value });
-                  setError(null);
-                }}
+                value={targetLanguage}
+                onChange={(e) => setTargetLanguage(e.target.value)}
+                className={`w-full px-3 py-2 rounded-md border ${
+                  theme === 'dark'
+                    ? 'bg-gray-800 border-gray-700 text-gray-300'
+                    : 'bg-white border-gray-300 text-gray-600'
+                } focus:outline-none focus:ring-2 focus:ring-teal-500`}
               >
                 <option value="">Selecione o idioma</option>
-                {COMMON_LANGUAGES.filter(
-                  (lang) => lang.code !== formData.sourceLanguage
-                ).map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.name}
+                {Object.keys(LANGUAGE_MAP).map((lang) => (
+                  <option key={lang} value={lang}>
+                    {LANGUAGE_MAP[lang].flag} {lang}
                   </option>
                 ))}
               </select>
             </div>
-            <div className="flex justify-end space-x-3">
-              <button
-                type="button"
-                onClick={() => navigate('/')}
-                className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+
+            <div className="flex justify-end gap-3">
+              <Link
+                to="/"
+                className={`px-4 py-2 rounded-md ${
+                  theme === 'dark'
+                    ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                    : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                }`}
               >
                 Cancelar
-              </button>
+              </Link>
               <button
                 type="submit"
-                className="px-4 py-2 bg-[#4DE082] text-black rounded-md hover:bg-[#44C975] focus:outline-none focus:ring-2 focus:ring-[#4DE082] font-medium"
+                className={`px-4 py-2 rounded-md ${
+                  theme === 'dark'
+                    ? 'bg-[#5AFF91] text-black hover:bg-[#4DE082]'
+                    : 'bg-teal-600 text-white hover:bg-teal-700'
+                }`}
               >
                 Criar Dicionário
               </button>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { UserData } from '../types';
 import { trashOutline } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
+import { useTheme } from '../context/ThemeContext';
 
 // Language mapping for flags and codes
 const LANGUAGE_MAP: Record<string, { code: string; flag: string }> = {
@@ -37,13 +38,29 @@ interface DeleteDialogProps {
 }
 
 function DeleteDialog({ dictionary, onConfirm, onCancel }: DeleteDialogProps) {
+  const { theme } = useTheme();
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-[#2a2a2a] p-6 rounded-lg w-full max-w-md border border-gray-700">
-        <h2 className="text-xl font-bold mb-4 text-[#4DE082]">
+      <div
+        className={`${
+          theme === 'dark'
+            ? 'bg-[#2a2a2a] border-gray-700'
+            : 'bg-white border-gray-200'
+        } p-6 rounded-lg w-full max-w-md border`}
+      >
+        <h2
+          className={`text-xl font-bold mb-4 ${
+            theme === 'dark' ? 'text-[#4DE082]' : 'text-teal-600'
+          }`}
+        >
           Excluir Dicionário
         </h2>
-        <p className="text-gray-300 mb-6">
+        <p
+          className={`${
+            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+          } mb-6`}
+        >
           Tem certeza que deseja excluir o dicionário{' '}
           {dictionary.sourceLanguage} → {dictionary.targetLanguage}? Esta ação
           irá remover permanentemente todas as {dictionary.words.length}{' '}
@@ -77,6 +94,7 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
   const [dictionaryToDelete, setDictionaryToDelete] = useState<string | null>(
     null
   );
+  const { theme } = useTheme();
 
   const handleDeleteClick = (dictionaryId: string) => {
     setDictionaryToDelete(dictionaryId);
@@ -94,14 +112,32 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
   };
 
   return (
-    <div className="min-h-screen p-4 bg-[#212121]">
+    <div
+      className={`min-h-screen p-4 ${
+        theme === 'dark' ? 'bg-[#212121]' : 'bg-gray-50'
+      }`}
+    >
       <div className="max-w-4xl mx-auto">
         {/* Header with Stats */}
-        <div className="bg-[#2a2a2a] p-6 rounded-lg border border-[#4DE082] border-opacity-20 mb-8">
-          <h1 className="text-2xl font-bold text-[#4DE082] mb-4">
+        <div
+          className={`${
+            theme === 'dark'
+              ? 'bg-[#2a2a2a] border-[#4DE082]'
+              : 'bg-white border-teal-500'
+          } p-6 rounded-lg border border-opacity-20 mb-8`}
+        >
+          <h1
+            className={`text-2xl font-bold ${
+              theme === 'dark' ? 'text-[#4DE082]' : 'text-teal-600'
+            } mb-4`}
+          >
             Olá, {userData.name}! 👋
           </h1>
-          <div className="text-gray-200">
+          <div
+            className={`${
+              theme === 'dark' ? 'text-gray-200' : 'text-gray-700'
+            }`}
+          >
             {totalWords === 0 ? (
               <p>
                 Você ainda não adicionou nenhuma palavra. Que tal começar
@@ -110,11 +146,19 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
             ) : (
               <p>
                 Você já aprendeu{' '}
-                <span className="text-[#5AFF91] font-bold text-xl">
+                <span
+                  className={`${
+                    theme === 'dark' ? 'text-[#5AFF91]' : 'text-teal-500'
+                  } font-bold text-xl`}
+                >
                   {totalWords}
                 </span>{' '}
                 {totalWords === 1 ? 'palavra' : 'palavras'} em{' '}
-                <span className="text-[#5AFF91] font-bold text-xl">
+                <span
+                  className={`${
+                    theme === 'dark' ? 'text-[#5AFF91]' : 'text-teal-500'
+                  } font-bold text-xl`}
+                >
                   {userData.dictionaries.length}
                 </span>{' '}
                 {userData.dictionaries.length === 1
@@ -136,25 +180,49 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
         {/* Dictionaries Section */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-gray-200">
+            <h2
+              className={`text-xl font-bold ${
+                theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
+              }`}
+            >
               Seus Dicionários
             </h2>
             <Link
               to="/new-dictionary"
-              className="px-4 py-2 bg-[#4DE082] text-black rounded-md hover:bg-[#44C975] focus:outline-none focus:ring-2 focus:ring-[#4DE082] font-medium"
+              className={`px-4 py-2 ${
+                theme === 'dark'
+                  ? 'bg-[#4DE082] text-black hover:bg-[#44C975]'
+                  : 'bg-teal-600 text-white hover:bg-teal-700'
+              } rounded-md focus:outline-none focus:ring-2 ${
+                theme === 'dark'
+                  ? 'focus:ring-[#4DE082]'
+                  : 'focus:ring-teal-500'
+              } font-medium`}
             >
               Novo Dicionário
             </Link>
           </div>
 
           {userData.dictionaries.length === 0 ? (
-            <div className="bg-[#2a2a2a] p-6 rounded-lg text-center">
-              <p className="text-gray-300 mb-4">
+            <div
+              className={`${
+                theme === 'dark' ? 'bg-[#2a2a2a]' : 'bg-white'
+              } p-6 rounded-lg text-center`}
+            >
+              <p
+                className={`${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                } mb-4`}
+              >
                 Você ainda não tem nenhum dicionário
               </p>
               <Link
                 to="/new-dictionary"
-                className="text-[#4DE082] hover:text-[#44C975]"
+                className={`${
+                  theme === 'dark'
+                    ? 'text-[#4DE082] hover:text-[#44C975]'
+                    : 'text-teal-600 hover:text-teal-700'
+                }`}
               >
                 Criar meu primeiro dicionário →
               </Link>
@@ -164,19 +232,41 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
               {userData.dictionaries.map((dictionary) => (
                 <div
                   key={dictionary.id}
-                  className="bg-[#2a2a2a] p-6 rounded-lg border border-gray-700 hover:border-[#4DE082] transition-colors"
+                  className={`${
+                    theme === 'dark'
+                      ? 'bg-[#2a2a2a] border-gray-700 hover:border-[#4DE082]'
+                      : 'bg-white border-gray-200 hover:border-teal-500'
+                  } p-6 rounded-lg border transition-colors`}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <Link
                       to={`/dictionary/${dictionary.id}`}
-                      className="text-lg font-bold text-[#5AFF91] hover:text-[#4DE082] flex items-center"
+                      className={`text-lg font-bold ${
+                        theme === 'dark'
+                          ? 'text-[#5AFF91] hover:text-[#4DE082]'
+                          : 'text-teal-600 hover:text-teal-700'
+                      } flex items-center`}
                     >
-                      <span className="text-gray-200">
+                      <span
+                        className={`${
+                          theme === 'dark' ? 'text-gray-200' : 'text-gray-600'
+                        }`}
+                      >
                         {LANGUAGE_MAP[dictionary.sourceLanguage]?.flag}{' '}
                         {LANGUAGE_MAP[dictionary.sourceLanguage]?.code}
                       </span>
-                      <span className="text-gray-400 mx-1">→</span>
-                      <span className="text-gray-200">
+                      <span
+                        className={`${
+                          theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                        }`}
+                      >
+                        →
+                      </span>
+                      <span
+                        className={`${
+                          theme === 'dark' ? 'text-gray-200' : 'text-gray-600'
+                        }`}
+                      >
                         {LANGUAGE_MAP[dictionary.targetLanguage]?.flag}{' '}
                         {LANGUAGE_MAP[dictionary.targetLanguage]?.code}
                       </span>
@@ -188,7 +278,11 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
                       <IonIcon icon={trashOutline} />
                     </button>
                   </div>
-                  <div className="text-sm text-gray-400">
+                  <div
+                    className={`text-sm ${
+                      theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                    }`}
+                  >
                     {dictionary.words.length}{' '}
                     {dictionary.words.length === 1 ? 'palavra' : 'palavras'}
                     <br />
@@ -205,7 +299,11 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
         {/* Recent Words Section */}
         {allWords.length > 0 && (
           <div>
-            <h2 className="text-xl font-bold text-gray-200 mb-6">
+            <h2
+              className={`text-xl font-bold mb-6 ${
+                theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
+              }`}
+            >
               Palavras Recentes
             </h2>
             <div className="space-y-4">
@@ -223,12 +321,22 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
                   return (
                     <div
                       key={word.id}
-                      className="bg-[#2a2a2a] p-4 rounded-lg border border-gray-700"
+                      className={`${
+                        theme === 'dark'
+                          ? 'bg-[#2a2a2a] border-gray-700'
+                          : 'bg-white border-gray-200'
+                      } p-4 rounded-lg border`}
                     >
                       <div className="flex justify-between items-start">
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-lg font-bold text-[#5AFF91]">
+                            <span
+                              className={`text-lg font-bold ${
+                                theme === 'dark'
+                                  ? 'text-[#5AFF91]'
+                                  : 'text-teal-600'
+                              }`}
+                            >
                               {word.word}
                             </span>
                             <span className="text-sm text-gray-400 flex items-center">
@@ -238,11 +346,23 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
                               {LANGUAGE_MAP[dictionary.targetLanguage]?.code}
                             </span>
                           </div>
-                          <p className="text-gray-300">{word.translation}</p>
+                          <p
+                            className={`${
+                              theme === 'dark'
+                                ? 'text-gray-300'
+                                : 'text-gray-700'
+                            }`}
+                          >
+                            {word.translation}
+                          </p>
                         </div>
                         <Link
                           to={`/dictionary/${dictionary.id}`}
-                          className="text-sm text-[#4DE082] hover:text-[#44C975]"
+                          className={`text-sm ${
+                            theme === 'dark'
+                              ? 'text-[#4DE082] hover:text-[#44C975]'
+                              : 'text-teal-600 hover:text-teal-700'
+                          }`}
                         >
                           Ver dicionário →
                         </Link>
