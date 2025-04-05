@@ -30,13 +30,13 @@ export default function Layout({ userData, children }: LayoutProps) {
 
   return (
     <div
-      className={`flex min-h-screen ${
+      className={`flex h-screen overflow-hidden ${
         theme === 'dark' ? 'bg-[#212121]' : 'bg-gray-50'
       }`}
     >
       {/* Sidebar */}
       <div
-        className={`w-64 ${
+        className={`w-64 h-screen ${
           theme === 'dark'
             ? 'bg-[#2a2a2a] border-gray-700'
             : 'bg-white border-gray-200'
@@ -60,7 +60,7 @@ export default function Layout({ userData, children }: LayoutProps) {
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1">
+        <nav className="flex-1 overflow-y-auto">
           <Link
             to="/"
             className={`block px-4 py-2 rounded-md mb-2 ${
@@ -137,7 +137,7 @@ export default function Layout({ userData, children }: LayoutProps) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto p-4">{children}</div>
       </div>
     </div>
