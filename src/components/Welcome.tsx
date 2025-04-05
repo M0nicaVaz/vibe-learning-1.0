@@ -41,7 +41,9 @@ export default function Welcome({ onUserDataSave }: WelcomeProps) {
               theme === 'dark' ? 'text-teal-400' : 'text-teal-600'
             } mb-6 text-center`}
           >
-            Bem-vindo ao Vibe Learning
+            Boas-vindas ao
+            <br />
+            <span className="text-4xl">✨ Vibe Learning ✨</span>
           </h1>
           <p
             className={`${
