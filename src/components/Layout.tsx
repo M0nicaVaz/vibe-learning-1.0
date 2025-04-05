@@ -1,8 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { UserData } from '../types';
 import { useTheme } from '../context/ThemeContext';
-import { moonOutline, sunnyOutline } from 'ionicons/icons';
+import {
+  moonOutline,
+  sunnyOutline,
+  menuOutline,
+  closeOutline,
+} from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
+import { useState, useEffect } from 'react';
 
 // Language mapping for flags and codes
 const LANGUAGE_MAP: Record<string, { code: string; flag: string }> = {
@@ -28,6 +34,40 @@ interface LayoutProps {
 export default function Layout({ userData, children }: LayoutProps) {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if the device is mobile or tablet
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+      if (window.innerWidth >= 1024) {
+        setIsSidebarOpen(true);
+      } else {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    // Initial check
+    checkIfMobile();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIfMobile);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+
+  // Close sidebar when navigating on mobile
+  useEffect(() => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  }, [location.pathname, isMobile]);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <div
@@ -35,9 +75,26 @@ export default function Layout({ userData, children }: LayoutProps) {
         theme === 'dark' ? 'bg-[#212121]' : 'bg-gray-50'
       }`}
     >
+      {/* Mobile Hamburger Button */}
+      <button
+        onClick={toggleSidebar}
+        className={`lg:hidden fixed top-4 right-4 z-50 p-2 rounded-md ${
+          theme === 'dark'
+            ? 'bg-[#2a2a2a] text-gray-300'
+            : 'bg-white text-gray-600'
+        }`}
+      >
+        <IonIcon
+          icon={isSidebarOpen ? closeOutline : menuOutline}
+          className="text-2xl"
+        />
+      </button>
+
       {/* Sidebar */}
       <div
-        className={`w-64 h-screen ${
+        className={`${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } lg:translate-x-0 fixed lg:static z-40 w-64 h-screen transition-transform duration-300 ease-in-out ${
           theme === 'dark'
             ? 'bg-[#2a2a2a] border-gray-700'
             : 'bg-white border-gray-200'
@@ -165,9 +222,17 @@ export default function Layout({ userData, children }: LayoutProps) {
         </div>
       </div>
 
+      {/* Overlay for mobile when sidebar is open */}
+      {isSidebarOpen && isMobile && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-4xl mx-auto p-4">{children}</div>
+        <div className="max-w-4xl mx-auto p-4 pt-16 lg:pt-4">{children}</div>
       </div>
     </div>
   );
