@@ -48,7 +48,7 @@ function DeleteDialog({ dictionary, onConfirm, onCancel }: DeleteDialogProps) {
   const { theme } = useTheme();
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
       <div
         className={`${
           theme === 'dark'
@@ -58,7 +58,7 @@ function DeleteDialog({ dictionary, onConfirm, onCancel }: DeleteDialogProps) {
       >
         <h2
           className={`text-xl font-bold mb-4 ${
-            theme === 'dark' ? 'text-[#4DE082]' : 'text-teal-600'
+            theme === 'dark' ? 'text-teal-400' : 'text-teal-600'
           }`}
         >
           Excluir Dicionário
@@ -103,7 +103,7 @@ function DeleteWordDialog({
   const { theme } = useTheme();
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
       <div
         className={`${
           theme === 'dark'
@@ -113,7 +113,7 @@ function DeleteWordDialog({
       >
         <h2
           className={`text-xl font-bold mb-4 ${
-            theme === 'dark' ? 'text-[#4DE082]' : 'text-teal-600'
+            theme === 'dark' ? 'text-teal-400' : 'text-teal-600'
           }`}
         >
           Excluir Palavra
@@ -248,15 +248,15 @@ export default function Dashboard({
         <div
           className={`${
             theme === 'dark'
-              ? 'bg-[#2a2a2a] border-[#4DE082]'
+              ? 'bg-[#2a2a2a] border-teal-400'
               : 'bg-white border-teal-500'
           } p-6 rounded-lg border border-opacity-20 mb-8`}
         >
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-6">
             <div>
               <h1
                 className={`text-2xl font-bold ${
-                  theme === 'dark' ? 'text-[#4DE082]' : 'text-teal-600'
+                  theme === 'dark' ? 'text-teal-300' : 'text-teal-600'
                 }`}
               >
                 <span
@@ -283,27 +283,15 @@ export default function Dashboard({
                   {dictionary.targetLanguage}
                 </span>
               </h1>
-              <p
-                className={`${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                } mt-2`}
-              >
-                {dictionary.words.length}{' '}
-                {dictionary.words.length === 1 ? 'palavra' : 'palavras'}
-              </p>
             </div>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteDialog(true)}
-                className={`px-3 py-1.5 ${
+                className={`p-1.5 ${
                   theme === 'dark'
-                    ? 'bg-gray-700 text-white hover:bg-gray-600'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                } rounded-md focus:outline-none focus:ring-2 ${
-                  theme === 'dark'
-                    ? 'focus:ring-gray-500'
-                    : 'focus:ring-gray-400'
-                } font-medium`}
+                    ? 'text-red-300 hover:text-red-400'
+                    : 'text-red-300 hover:text-red-400'
+                } rounded-md focus:outline-none`}
               >
                 <IonIcon icon={trashOutline} className="text-lg" />
               </button>
@@ -311,11 +299,11 @@ export default function Dashboard({
                 onClick={() => setIsFormOpen(true)}
                 className={`px-3 py-1.5 ${
                   theme === 'dark'
-                    ? 'bg-[#4DE082] text-black hover:bg-[#44C975]'
+                    ? 'bg-teal-400 text-black hover:bg-teal-500'
                     : 'bg-teal-600 text-white hover:bg-teal-700'
                 } rounded-md focus:outline-none focus:ring-2 ${
                   theme === 'dark'
-                    ? 'focus:ring-[#4DE082]'
+                    ? 'focus:ring-teal-400'
                     : 'focus:ring-teal-500'
                 } font-medium flex items-center gap-2`}
               >
@@ -328,7 +316,7 @@ export default function Dashboard({
               theme === 'dark'
                 ? 'bg-[#2a2a2a] p-4 rounded-lg border border-gray-700'
                 : 'bg-white p-4 rounded-lg border border-gray-200'
-            }`}
+            } mt-4`}
           >
             <p
               className={`${
@@ -343,7 +331,7 @@ export default function Dashboard({
                   <span
                     className={`${
                       theme === 'dark'
-                        ? 'text-[#5AFF91] font-bold text-xl'
+                        ? 'text-teal-300 font-bold text-xl'
                         : 'text-teal-600 font-bold text-xl'
                     }`}
                   >
@@ -369,7 +357,7 @@ export default function Dashboard({
                 ? 'bg-[#2a2a2a] text-white border-gray-700'
                 : 'bg-white text-gray-900 border-gray-300'
             } rounded-lg focus:outline-none focus:ring-2 ${
-              theme === 'dark' ? 'focus:ring-[#4DE082]' : 'focus:ring-teal-500'
+              theme === 'dark' ? 'focus:ring-teal-400' : 'focus:ring-teal-500'
             }`}
           />
           {searchTerm && (
@@ -403,7 +391,7 @@ export default function Dashboard({
                     <h3
                       className={`${
                         theme === 'dark'
-                          ? 'text-xl font-bold text-[#5AFF91]'
+                          ? 'text-xl font-bold text-teal-300'
                           : 'text-teal-600'
                       }`}
                     >
@@ -443,7 +431,7 @@ export default function Dashboard({
                     onClick={() => handleEdit(word)}
                     className={`${
                       theme === 'dark'
-                        ? 'text-[#4DE082] hover:text-[#44C975]'
+                        ? 'text-teal-400 hover:text-teal-500'
                         : 'text-teal-600 hover:text-teal-700'
                     } p-2 text-sm`}
                   >
@@ -467,7 +455,7 @@ export default function Dashboard({
 
         {/* Add/Edit Word Modal */}
         {isFormOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
             <div
               className={`${
                 theme === 'dark' ? 'bg-[#2a2a2a]' : 'bg-white'
@@ -475,7 +463,7 @@ export default function Dashboard({
             >
               <h2
                 className={`text-xl font-bold mb-4 ${
-                  theme === 'dark' ? 'text-[#4DE082]' : 'text-teal-600'
+                  theme === 'dark' ? 'text-teal-400' : 'text-teal-600'
                 }`}
               >
                 {editingWord ? 'Editar Palavra' : 'Nova Palavra'}
@@ -504,7 +492,7 @@ export default function Dashboard({
                         : 'bg-white text-gray-900 border-gray-300'
                     } rounded-md border focus:outline-none focus:ring-2 ${
                       theme === 'dark'
-                        ? 'focus:ring-[#4DE082]'
+                        ? 'focus:ring-teal-400'
                         : 'focus:ring-teal-500'
                     }`}
                     value={formData.word}
@@ -530,7 +518,7 @@ export default function Dashboard({
                         : 'bg-white text-gray-900 border-gray-300'
                     } rounded-md border focus:outline-none focus:ring-2 ${
                       theme === 'dark'
-                        ? 'focus:ring-[#4DE082]'
+                        ? 'focus:ring-teal-400'
                         : 'focus:ring-teal-500'
                     }`}
                     value={formData.translation}
@@ -555,7 +543,7 @@ export default function Dashboard({
                         : 'bg-white text-gray-900 border-gray-300'
                     } rounded-md border focus:outline-none focus:ring-2 ${
                       theme === 'dark'
-                        ? 'focus:ring-[#4DE082]'
+                        ? 'focus:ring-teal-400'
                         : 'focus:ring-teal-500'
                     }`}
                     value={formData.phonetics}
@@ -592,11 +580,11 @@ export default function Dashboard({
                     type="submit"
                     className={`px-4 py-2 ${
                       theme === 'dark'
-                        ? 'bg-[#4DE082] text-black hover:bg-[#44C975]'
+                        ? 'bg-teal-400 text-black hover:bg-teal-500'
                         : 'bg-teal-600 text-white hover:bg-teal-700'
                     } rounded-md focus:outline-none focus:ring-2 ${
                       theme === 'dark'
-                        ? 'focus:ring-[#4DE082]'
+                        ? 'focus:ring-teal-400'
                         : 'focus:ring-teal-500'
                     } font-medium`}
                   >

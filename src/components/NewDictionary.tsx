@@ -87,8 +87,8 @@ export default function NewDictionary({
           }`}
         >
           <h1
-            className={`text-2xl font-bold mb-6 ${
-              theme === 'dark' ? 'text-[#4DE082]' : 'text-teal-600'
+            className={`text-xl font-bold mb-4 ${
+              theme === 'dark' ? 'text-teal-400' : 'text-teal-600'
             }`}
           >
             Criar Novo Dicionário
@@ -172,7 +172,7 @@ export default function NewDictionary({
                 type="submit"
                 className={`px-4 py-2 rounded-md ${
                   theme === 'dark'
-                    ? 'bg-[#5AFF91] text-black hover:bg-[#4DE082]'
+                    ? 'bg-teal-400 text-black hover:bg-teal-500'
                     : 'bg-teal-600 text-white hover:bg-teal-700'
                 }`}
               >

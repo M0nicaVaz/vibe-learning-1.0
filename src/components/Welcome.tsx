@@ -38,7 +38,7 @@ export default function Welcome({ onUserDataSave }: WelcomeProps) {
         >
           <h1
             className={`text-3xl font-bold ${
-              theme === 'dark' ? 'text-[#4DE082]' : 'text-teal-600'
+              theme === 'dark' ? 'text-teal-400' : 'text-teal-600'
             } mb-6 text-center`}
           >
             Bem-vindo ao Vibe Learning
@@ -72,7 +72,7 @@ export default function Welcome({ onUserDataSave }: WelcomeProps) {
                     : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
                 } border rounded-md focus:outline-none focus:ring-2 ${
                   theme === 'dark'
-                    ? 'focus:ring-[#4DE082]'
+                    ? 'focus:ring-teal-400'
                     : 'focus:ring-teal-500'
                 } focus:border-transparent`}
                 value={name}
@@ -84,12 +84,10 @@ export default function Welcome({ onUserDataSave }: WelcomeProps) {
               type="submit"
               className={`w-full px-4 py-2 ${
                 theme === 'dark'
-                  ? 'bg-[#4DE082] text-black hover:bg-[#44C975]'
+                  ? 'bg-teal-400 text-black hover:bg-teal-500'
                   : 'bg-teal-600 text-white hover:bg-teal-700'
               } rounded-md focus:outline-none focus:ring-2 ${
-                theme === 'dark'
-                  ? 'focus:ring-[#4DE082]'
-                  : 'focus:ring-teal-500'
+                theme === 'dark' ? 'focus:ring-teal-400' : 'focus:ring-teal-500'
               } font-medium`}
             >
               Começar

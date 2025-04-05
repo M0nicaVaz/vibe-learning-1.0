@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { moonOutline, sunnyOutline } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
 
+// Language mapping for flags and codes
 const LANGUAGE_MAP: Record<string, { code: string; flag: string }> = {
   Português: { code: 'PT', flag: '🇧🇷' },
   Inglês: { code: 'EN', flag: '🇬🇧' },
@@ -45,7 +46,7 @@ export default function Layout({ userData, children }: LayoutProps) {
         <div className="mb-8">
           <h2
             className={`text-xl font-bold ${
-              theme === 'dark' ? 'text-[#4DE082]' : 'text-teal-600'
+              theme === 'dark' ? 'text-teal-400' : 'text-teal-600'
             } mb-2`}
           >
             Olá, {userData.name}!
@@ -66,7 +67,7 @@ export default function Layout({ userData, children }: LayoutProps) {
             className={`block px-4 py-2 rounded-md mb-2 ${
               location.pathname === '/'
                 ? theme === 'dark'
-                  ? 'bg-[#5AFF91] text-black font-medium'
+                  ? 'bg-teal-300 text-black font-medium'
                   : 'bg-teal-600 text-white font-medium'
                 : theme === 'dark'
                 ? 'text-gray-300 hover:bg-gray-800'
@@ -87,7 +88,7 @@ export default function Layout({ userData, children }: LayoutProps) {
                   className={`block px-4 py-2 rounded-md ${
                     location.pathname === `/dictionary/${dict.id}`
                       ? theme === 'dark'
-                        ? 'bg-[#5AFF91] text-black font-medium'
+                        ? 'bg-teal-300 text-black font-medium'
                         : 'bg-teal-600 text-white font-medium'
                       : theme === 'dark'
                       ? 'text-gray-300 hover:bg-gray-800'
@@ -113,27 +114,29 @@ export default function Layout({ userData, children }: LayoutProps) {
           </div>
         </nav>
 
-        {/* Theme Toggle Button */}
-        <button
-          onClick={toggleTheme}
-          className={`mt-4 px-4 py-2 rounded-md flex items-center justify-center gap-2 ${
-            theme === 'dark'
-              ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-              : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-          }`}
-        >
-          {theme === 'dark' ? (
-            <>
-              <IonIcon icon={sunnyOutline} className="text-lg" />
-              <span>Modo Claro</span>
-            </>
-          ) : (
-            <>
-              <IonIcon icon={moonOutline} className="text-lg" />
-              <span>Modo Escuro</span>
-            </>
-          )}
-        </button>
+        {/* Theme Toggle */}
+        <div className="mt-4 flex items-center justify-between">
+          <IonIcon
+            icon={theme === 'dark' ? moonOutline : sunnyOutline}
+            className={`text-xl ${
+              theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+            }`}
+          />
+          <button
+            onClick={toggleTheme}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+              theme === 'dark' ? 'bg-teal-400/80' : 'bg-teal-600/80'
+            }`}
+            role="switch"
+            aria-checked={theme === 'dark'}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                theme === 'dark' ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
       {/* Main Content */}
