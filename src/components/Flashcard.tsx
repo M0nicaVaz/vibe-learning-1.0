@@ -179,6 +179,18 @@ export default function Flashcard({ userData }: FlashcardProps) {
             </button>
           </div>
         </div>
+
+        {/* Progress Bar */}
+        <div className="max-w-4xl mx-auto mt-4">
+          <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div
+              className={`h-2.5 rounded-full ${
+                theme === 'dark' ? 'bg-teal-400' : 'bg-teal-600'
+              }`}
+              style={{ width: `${((currentIndex + 1) / words.length) * 100}%` }}
+            ></div>
+          </div>
+        </div>
       </div>
 
       {/* Flashcard Content */}
@@ -214,7 +226,9 @@ export default function Flashcard({ userData }: FlashcardProps) {
                     theme === 'dark'
                       ? 'bg-[#2a2a2a] text-white'
                       : 'bg-white text-gray-800'
-                  } shadow-lg w-full`}
+                  } shadow-lg w-full border-4 ${
+                    theme === 'dark' ? 'border-teal-400' : 'border-teal-600'
+                  } rounded-xl`}
                 >
                   <div className="flex flex-col items-center p-6">
                     <div className="text-4xl mb-4">
@@ -241,7 +255,9 @@ export default function Flashcard({ userData }: FlashcardProps) {
                     theme === 'dark'
                       ? 'bg-[#2a2a2a] text-white'
                       : 'bg-white text-gray-800'
-                  } shadow-lg w-full`}
+                  } shadow-lg w-full border-4 ${
+                    theme === 'dark' ? 'border-teal-400' : 'border-teal-600'
+                  } rounded-xl`}
                 >
                   <div className="flex flex-col items-center p-6">
                     <div className="text-4xl mb-4">
@@ -296,23 +312,32 @@ export default function Flashcard({ userData }: FlashcardProps) {
                   className={`mt-4 p-4 rounded-md w-full text-center text-lg ${
                     answerStatus === 'correct'
                       ? theme === 'dark'
-                        ? 'bg-green-800 text-green-200'
-                        : 'bg-green-100 text-green-800'
+                        ? 'bg-teal-400/20 text-teal-300 border border-teal-400/30'
+                        : 'bg-teal-100 text-teal-800 border border-teal-200'
                       : theme === 'dark'
-                      ? 'bg-red-800 text-red-200'
-                      : 'bg-red-100 text-red-800'
+                      ? 'bg-red-400/20 text-red-300 border border-red-400/30'
+                      : 'bg-red-100 text-red-800 border border-red-200'
                   }`}
                 >
                   {answerStatus === 'correct' ? (
                     <p className="flex items-center justify-center">
-                      <span className="text-2xl mr-2">🎉</span> Parabéns! Você
-                      acertou! <span className="text-2xl ml-2">🎉</span>
+                      <span className="text-2xl mr-2">🎉</span>
+                      <span className="font-medium">
+                        Parabéns! Você acertou!
+                      </span>
+                      <span className="text-2xl ml-2">🎉</span>
                     </p>
                   ) : (
                     <p className="flex flex-col items-center">
                       <span className="text-2xl mb-2">😕</span>
-                      <span>Ops! A tradução correta é:</span>
-                      <span className="font-medium mt-1">
+                      <span className="font-medium">
+                        Ops! A tradução correta é:
+                      </span>
+                      <span
+                        className={`mt-1 font-medium ${
+                          theme === 'dark' ? 'text-teal-300' : 'text-teal-700'
+                        }`}
+                      >
                         {words[currentIndex]?.translation}
                       </span>
                     </p>
