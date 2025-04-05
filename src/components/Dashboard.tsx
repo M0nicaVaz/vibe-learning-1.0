@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { UserData, WordEntry } from '../types';
+import { trashOutline, addOutline, pencilOutline } from 'ionicons/icons';
+import { IonIcon } from '@ionic/react';
 
 interface DashboardProps {
   userData: UserData;
@@ -15,6 +17,12 @@ interface DeleteDialogProps {
     targetLanguage: string;
     words: { length: number };
   };
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+interface DeleteWordDialogProps {
+  word: WordEntry;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -54,6 +62,40 @@ function DeleteDialog({ dictionary, onConfirm, onCancel }: DeleteDialogProps) {
   );
 }
 
+function DeleteWordDialog({
+  word,
+  onConfirm,
+  onCancel,
+}: DeleteWordDialogProps) {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-[#2a2a2a] p-6 rounded-lg w-full max-w-md border border-gray-700">
+        <h2 className="text-xl font-bold mb-4 text-[#4DE082]">
+          Excluir Palavra
+        </h2>
+        <p className="text-gray-300 mb-6">
+          Tem certeza que deseja excluir a palavra <strong>{word.word}</strong>?
+          Esta ação não pode ser desfeita.
+        </p>
+        <div className="flex justify-end space-x-3">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+          >
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard({
   userData,
   onWordsUpdate,
@@ -66,10 +108,10 @@ export default function Dashboard({
   const [editingWord, setEditingWord] = useState<WordEntry | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [wordToDelete, setWordToDelete] = useState<WordEntry | null>(null);
   const [formData, setFormData] = useState({
     word: '',
     translation: '',
-    meaning: '',
     phonetics: '',
   });
 
@@ -85,7 +127,6 @@ export default function Dashboard({
       id: editingWord?.id || Date.now().toString(),
       word: formData.word,
       translation: formData.translation,
-      meaning: formData.meaning || undefined,
       phonetics: formData.phonetics || undefined,
       dictionaryId: dictionary.id,
       timestamp: new Date().toLocaleString('pt-BR', {
@@ -106,7 +147,6 @@ export default function Dashboard({
     setFormData({
       word: '',
       translation: '',
-      meaning: '',
       phonetics: '',
     });
     setEditingWord(null);
@@ -118,15 +158,25 @@ export default function Dashboard({
     setFormData({
       word: word.word,
       translation: word.translation,
-      meaning: word.meaning || '',
       phonetics: word.phonetics || '',
     });
     setIsFormOpen(true);
   };
 
-  const handleDelete = (wordId: string) => {
-    const newWords = dictionary.words.filter((w) => w.id !== wordId);
-    onWordsUpdate(dictionary.id, newWords);
+  const handleDelete = (word: WordEntry) => {
+    setWordToDelete(word);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (wordToDelete) {
+      const newWords = dictionary.words.filter((w) => w.id !== wordToDelete.id);
+      onWordsUpdate(dictionary.id, newWords);
+      setWordToDelete(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setWordToDelete(null);
   };
 
   const handleDictionaryDelete = () => {
@@ -153,15 +203,15 @@ export default function Dashboard({
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteDialog(true)}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                className="px-3 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center gap-2"
               >
-                Excluir Dicionário
+                <IonIcon icon={trashOutline} className="text-lg" />
               </button>
               <button
                 onClick={() => setIsFormOpen(true)}
-                className="px-4 py-2 bg-[#4DE082] text-black rounded-md hover:bg-[#44C975] focus:outline-none focus:ring-2 focus:ring-[#4DE082] font-medium"
+                className="px-3 py-1.5 bg-[#4DE082] text-black rounded-md hover:bg-[#44C975] focus:outline-none focus:ring-2 focus:ring-[#4DE082] font-medium flex items-center gap-2"
               >
-                Adicionar Palavra
+                <IonIcon icon={addOutline} className="text-lg" /> Nova Palavra
               </button>
             </div>
           </div>
@@ -218,11 +268,6 @@ export default function Dashboard({
                       </h3>
                     </div>
                     <p className="text-gray-300 text-lg">{word.translation}</p>
-                    {word.meaning && (
-                      <p className="text-gray-400 mt-2 text-sm italic">
-                        {word.meaning}
-                      </p>
-                    )}
                     {word.phonetics && (
                       <p className="text-gray-400 mt-1 font-mono text-sm">
                         /{word.phonetics}/
@@ -237,13 +282,13 @@ export default function Dashboard({
                       onClick={() => handleEdit(word)}
                       className="p-2 text-[#4DE082] hover:text-[#44C975] text-sm"
                     >
-                      Editar
+                      <IonIcon icon={pencilOutline} className="text-lg" />
                     </button>
                     <button
-                      onClick={() => handleDelete(word.id)}
+                      onClick={() => handleDelete(word)}
                       className="p-2 text-red-500 hover:text-red-400 text-sm"
                     >
-                      Excluir
+                      <IonIcon icon={trashOutline} className="text-lg" />
                     </button>
                   </div>
                 </div>
@@ -291,19 +336,6 @@ export default function Dashboard({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300">
-                    Significado (opcional)
-                  </label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-3 py-2 bg-[#333] border border-gray-600 rounded-md text-white"
-                    value={formData.meaning}
-                    onChange={(e) =>
-                      setFormData({ ...formData, meaning: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300">
                     Fonética (opcional)
                   </label>
                   <input
@@ -324,7 +356,6 @@ export default function Dashboard({
                       setFormData({
                         word: '',
                         translation: '',
-                        meaning: '',
                         phonetics: '',
                       });
                     }}
@@ -350,6 +381,15 @@ export default function Dashboard({
             dictionary={dictionary}
             onConfirm={handleDictionaryDelete}
             onCancel={() => setShowDeleteDialog(false)}
+          />
+        )}
+
+        {/* Delete Word Dialog */}
+        {wordToDelete && (
+          <DeleteWordDialog
+            word={wordToDelete}
+            onConfirm={handleDeleteConfirm}
+            onCancel={handleDeleteCancel}
           />
         )}
       </div>

@@ -1,6 +1,24 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserData } from '../types';
+import { trashOutline } from 'ionicons/icons';
+import { IonIcon } from '@ionic/react';
+
+// Language mapping for flags and codes
+const LANGUAGE_MAP: Record<string, { code: string; flag: string }> = {
+  Português: { code: 'PT', flag: '🇧🇷' },
+  Inglês: { code: 'EN', flag: '🇬🇧' },
+  Espanhol: { code: 'ES', flag: '🇪🇸' },
+  Francês: { code: 'FR', flag: '🇫🇷' },
+  Alemão: { code: 'DE', flag: '🇩🇪' },
+  Italiano: { code: 'IT', flag: '🇮🇹' },
+  Japonês: { code: 'JP', flag: '🇯🇵' },
+  Coreano: { code: 'KR', flag: '🇰🇷' },
+  Chinês: { code: 'CN', flag: '🇨🇳' },
+  Russo: { code: 'RU', flag: '🇷🇺' },
+  Árabe: { code: 'AR', flag: '🇸🇦' },
+  Hindi: { code: 'HI', flag: '🇮🇳' },
+};
 
 interface HomeProps {
   userData: UserData;
@@ -153,14 +171,16 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
                       to={`/dictionary/${dictionary.id}`}
                       className="text-lg font-bold text-[#5AFF91] hover:text-[#4DE082]"
                     >
-                      {dictionary.sourceLanguage.toUpperCase()} →{' '}
-                      {dictionary.targetLanguage.toUpperCase()}
+                      {LANGUAGE_MAP[dictionary.sourceLanguage]?.flag}{' '}
+                      {LANGUAGE_MAP[dictionary.sourceLanguage]?.code} →{' '}
+                      {LANGUAGE_MAP[dictionary.targetLanguage]?.flag}{' '}
+                      {LANGUAGE_MAP[dictionary.targetLanguage]?.code}
                     </Link>
                     <button
                       onClick={() => handleDeleteClick(dictionary.id)}
                       className="text-sm text-red-400 hover:text-red-300"
                     >
-                      Excluir
+                      <IonIcon icon={trashOutline} />
                     </button>
                   </div>
                   <div className="text-sm text-gray-400">

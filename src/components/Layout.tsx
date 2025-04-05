@@ -1,6 +1,21 @@
 import { Link, useLocation } from 'react-router-dom';
 import { UserData } from '../types';
 
+const LANGUAGE_MAP: Record<string, { code: string; flag: string }> = {
+  Português: { code: 'PT', flag: '🇧🇷' },
+  Inglês: { code: 'EN', flag: '🇬🇧' },
+  Espanhol: { code: 'ES', flag: '🇪🇸' },
+  Francês: { code: 'FR', flag: '🇫🇷' },
+  Alemão: { code: 'DE', flag: '🇩🇪' },
+  Italiano: { code: 'IT', flag: '🇮🇹' },
+  Japonês: { code: 'JP', flag: '🇯🇵' },
+  Coreano: { code: 'KR', flag: '🇰🇷' },
+  Chinês: { code: 'CN', flag: '🇨🇳' },
+  Russo: { code: 'RU', flag: '🇷🇺' },
+  Árabe: { code: 'AR', flag: '🇸🇦' },
+  Hindi: { code: 'HI', flag: '🇮🇳' },
+};
+
 interface LayoutProps {
   userData: UserData;
   children: React.ReactNode;
@@ -34,33 +49,33 @@ export default function Layout({ userData, children }: LayoutProps) {
           </Link>
 
           <div className="mt-4 space-y-1">
-            {userData.dictionaries.map((dict) => (
-              <Link
-                key={dict.id}
-                to={`/dictionary/${dict.id}`}
-                className={`block px-4 py-2 rounded-md ${
-                  location.pathname === `/dictionary/${dict.id}`
-                    ? 'bg-[#5AFF91] text-black font-medium'
-                    : 'text-gray-300 hover:bg-gray-800'
-                }`}
-              >
-                {dict.sourceLanguage.toUpperCase()} →{' '}
-                {dict.targetLanguage.toUpperCase()}
-                <span className="text-xs ml-2 text-gray-500">
-                  ({dict.words.length})
-                </span>
-              </Link>
-            ))}
+            {userData.dictionaries.map((dict) => {
+              const sourceInfo = LANGUAGE_MAP[dict.sourceLanguage];
+              const targetInfo = LANGUAGE_MAP[dict.targetLanguage];
+              return (
+                <Link
+                  key={dict.id}
+                  to={`/dictionary/${dict.id}`}
+                  className={`block px-4 py-2 rounded-md ${
+                    location.pathname === `/dictionary/${dict.id}`
+                      ? 'bg-[#5AFF91] text-black font-medium'
+                      : 'text-gray-300 hover:bg-gray-800'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      {sourceInfo?.flag} {sourceInfo?.code} → {targetInfo?.flag}{' '}
+                      {targetInfo?.code}
+                    </div>
+                    <span className="text-xs text-gray-500">
+                      ({dict.words.length})
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </nav>
-
-        {/* Add Dictionary Button */}
-        <Link
-          to="/new-dictionary"
-          className="mt-4 px-4 py-2 bg-[#4DE082] text-black rounded-md hover:bg-[#44C975] focus:outline-none focus:ring-2 focus:ring-[#4DE082] font-medium text-center"
-        >
-          Novo Dicionário
-        </Link>
       </div>
 
       {/* Main Content */}
