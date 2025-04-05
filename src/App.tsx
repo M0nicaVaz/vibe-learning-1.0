@@ -5,12 +5,13 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-import { UserData, Dictionary } from './types';
+import { UserData, Dictionary, WordEntry } from './types';
 import Layout from './components/Layout';
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import NewDictionary from './components/NewDictionary';
 import Welcome from './components/Welcome';
+import Flashcard from './components/Flashcard';
 import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
@@ -60,6 +61,21 @@ function App() {
     });
   };
 
+  const handleNameSubmit = (name: string) => {
+    // Implementation of handleNameSubmit
+  };
+
+  const handleDictionaryCreate = (dictionary: Dictionary) => {
+    // Implementation of handleDictionaryCreate
+  };
+
+  const handleWordsUpdate = (
+    dictionaryId: string,
+    words: (typeof userData.dictionaries)[0]['words']
+  ) => {
+    // Implementation of handleWordsUpdate
+  };
+
   if (!userData) {
     return (
       <ThemeProvider>
@@ -76,32 +92,53 @@ function App() {
             <Route
               path="/"
               element={
-                <Home
-                  userData={userData}
-                  onDictionaryDelete={handleDictionaryDelete}
-                />
-              }
-            />
-            <Route
-              path="/dictionary/:id"
-              element={
-                <Dashboard
-                  userData={userData}
-                  onWordsUpdate={handleWordUpdate}
-                  onDictionaryDelete={handleDictionaryDelete}
-                />
+                userData ? (
+                  <Home
+                    userData={userData}
+                    onDictionaryDelete={handleDictionaryDelete}
+                  />
+                ) : (
+                  <Welcome onNameSubmit={handleNameSubmit} />
+                )
               }
             />
             <Route
               path="/new-dictionary"
               element={
-                <NewDictionary
-                  onSave={handleDictionarySave}
-                  userData={userData}
-                />
+                userData ? (
+                  <NewDictionary
+                    userData={userData}
+                    onDictionaryCreate={handleDictionaryCreate}
+                  />
+                ) : (
+                  <Navigate to="/" replace />
+                )
               }
             />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route
+              path="/dictionary/:id"
+              element={
+                userData ? (
+                  <Dashboard
+                    userData={userData}
+                    onWordsUpdate={handleWordsUpdate}
+                    onDictionaryDelete={handleDictionaryDelete}
+                  />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              }
+            />
+            <Route
+              path="/flashcards/:id"
+              element={
+                userData ? (
+                  <Flashcard userData={userData} />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              }
+            />
           </Routes>
         </Layout>
       </Router>

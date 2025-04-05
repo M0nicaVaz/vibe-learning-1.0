@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { UserData } from '../types';
 import { useTheme } from '../context/ThemeContext';
-import { moonOutline, sunnyOutline } from 'ionicons/icons';
+import { moonOutline, sunnyOutline, cardOutline } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
 
 // Language mapping for flags and codes
@@ -64,17 +64,17 @@ export default function Layout({ userData, children }: LayoutProps) {
         <nav className="flex-1 overflow-y-auto">
           <Link
             to="/"
-            className={`block px-4 py-2 rounded-md mb-2 ${
+            className={`flex items-center px-4 py-2 rounded-md ${
               location.pathname === '/'
                 ? theme === 'dark'
-                  ? 'bg-teal-300 text-black font-medium'
+                  ? 'bg-teal-400 text-black font-medium'
                   : 'bg-teal-600 text-white font-medium'
                 : theme === 'dark'
                 ? 'text-gray-300 hover:bg-gray-800'
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
-            🏠 Início
+            <span>Início</span>
           </Link>
 
           <div className="mt-4 space-y-1">
@@ -82,33 +82,43 @@ export default function Layout({ userData, children }: LayoutProps) {
               const sourceInfo = LANGUAGE_MAP[dict.sourceLanguage];
               const targetInfo = LANGUAGE_MAP[dict.targetLanguage];
               return (
-                <Link
-                  key={dict.id}
-                  to={`/dictionary/${dict.id}`}
-                  className={`block px-4 py-2 rounded-md ${
-                    location.pathname === `/dictionary/${dict.id}`
-                      ? theme === 'dark'
-                        ? 'bg-teal-300 text-black font-medium'
-                        : 'bg-teal-600 text-white font-medium'
-                      : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-gray-800'
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
+                <div key={dict.id} className="space-y-1">
+                  <Link
+                    to={`/dictionary/${dict.id}`}
+                    className={`flex items-center px-4 py-2 rounded-md ${
+                      location.pathname === `/dictionary/${dict.id}`
+                        ? theme === 'dark'
+                          ? 'bg-teal-400 text-black font-medium'
+                          : 'bg-teal-600 text-white font-medium'
+                        : theme === 'dark'
+                        ? 'text-gray-300 hover:bg-gray-800'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    <span>
                       {sourceInfo?.flag} {sourceInfo?.code} → {targetInfo?.flag}{' '}
                       {targetInfo?.code}
-                    </div>
-                    <span
-                      className={`text-xs ${
-                        theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+                    </span>
+                  </Link>
+
+                  {location.pathname === `/dictionary/${dict.id}` && (
+                    <Link
+                      to={`/flashcards/${dict.id}`}
+                      className={`flex items-center px-4 py-2 ml-4 rounded-md ${
+                        location.pathname === `/flashcards/${dict.id}`
+                          ? theme === 'dark'
+                            ? 'bg-teal-400 text-black font-medium'
+                            : 'bg-teal-600 text-white font-medium'
+                          : theme === 'dark'
+                          ? 'text-gray-300 hover:bg-gray-800'
+                          : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
-                      ({dict.words.length})
-                    </span>
-                  </div>
-                </Link>
+                      <IonIcon icon={cardOutline} className="mr-2" />
+                      <span>Flashcards</span>
+                    </Link>
+                  )}
+                </div>
               );
             })}
           </div>
