@@ -26,76 +26,6 @@ interface HomeProps {
   onDictionaryDelete: (dictionaryId: string) => void;
 }
 
-interface DeleteDialogProps {
-  dictionary: {
-    id: string;
-    sourceLanguage: string;
-    targetLanguage: string;
-    words: { length: number };
-  };
-  onConfirm: () => void;
-  onCancel: () => void;
-}
-
-function DeleteDialog({ dictionary, onConfirm, onCancel }: DeleteDialogProps) {
-  const { theme } = useTheme();
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div
-        className={`${
-          theme === 'dark'
-            ? 'bg-[#2a2a2a] border-gray-700'
-            : 'bg-white border-gray-200'
-        } p-6 rounded-lg w-full max-w-md border`}
-      >
-        <h2
-          className={`text-xl font-bold mb-4 ${
-            theme === 'dark' ? 'text-teal-400' : 'text-teal-600'
-          }`}
-        >
-          Excluir Dicionário
-        </h2>
-        <p
-          className={`${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-          } mb-6`}
-        >
-          Tem certeza que deseja excluir o dicionário{' '}
-          {dictionary.sourceLanguage} → {dictionary.targetLanguage}? Esta ação
-          irá remover permanentemente todas as {dictionary.words.length}{' '}
-          {dictionary.words.length === 1
-            ? 'palavra cadastrada'
-            : 'palavras cadastradas'}
-          .
-        </p>
-        <div className="flex justify-end space-x-3">
-          <button
-            onClick={onCancel}
-            className={`px-4 py-2 rounded-md cursor-pointer ${
-              theme === 'dark'
-                ? 'bg-gray-700 text-white hover:bg-gray-600'
-                : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-            }`}
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={onConfirm}
-            className={`px-4 py-2 rounded-md cursor-pointer ${
-              theme === 'dark'
-                ? 'bg-red-500 text-white hover:bg-red-600'
-                : 'bg-red-600 text-white hover:bg-red-700'
-            }`}
-          >
-            Excluir
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function Home({ userData, onDictionaryDelete }: HomeProps) {
   const allWords = userData.dictionaries.flatMap((dict) => dict.words);
   const totalWords = allWords.length;
@@ -106,17 +36,6 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
 
   const handleDeleteClick = (dictionaryId: string) => {
     setDictionaryToDelete(dictionaryId);
-  };
-
-  const handleDeleteConfirm = () => {
-    if (dictionaryToDelete) {
-      onDictionaryDelete(dictionaryToDelete);
-      setDictionaryToDelete(null);
-    }
-  };
-
-  const handleDeleteCancel = () => {
-    setDictionaryToDelete(null);
   };
 
   return (
@@ -178,12 +97,68 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
                   : totalWords >= 50
                   ? '🌟 Muito bem! Continue assim!'
                   : totalWords >= 10
-                  ? '👏 Ótimo progresso!'
-                  : '💪 Continue assim!'}
+                  ? '💪 Você está no caminho certo!'
+                  : '🌱 Você está começando sua jornada!'}
               </p>
             )}
           </div>
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        {dictionaryToDelete && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div
+              className={`${
+                theme === 'dark'
+                  ? 'bg-[#2a2a2a] border-gray-700'
+                  : 'bg-white border-gray-200'
+              } p-6 rounded-lg w-full max-w-md border`}
+            >
+              <h2
+                className={`text-xl font-bold ${
+                  theme === 'dark' ? 'text-red-400' : 'text-red-600'
+                } mb-4`}
+              >
+                Confirmar Exclusão
+              </h2>
+              <p
+                className={`${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                } mb-6`}
+              >
+                Tem certeza que deseja excluir este dicionário? Esta ação não
+                pode ser desfeita.
+              </p>
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => setDictionaryToDelete(null)}
+                  className={`px-4 py-2 rounded-md cursor-pointer ${
+                    theme === 'dark'
+                      ? 'bg-gray-700 text-white hover:bg-gray-600'
+                      : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                  }`}
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => {
+                    if (dictionaryToDelete) {
+                      onDictionaryDelete(dictionaryToDelete);
+                      setDictionaryToDelete(null);
+                    }
+                  }}
+                  className={`px-4 py-2 rounded-md cursor-pointer ${
+                    theme === 'dark'
+                      ? 'bg-red-500 text-white hover:bg-red-600'
+                      : 'bg-red-600 text-white hover:bg-red-700'
+                  }`}
+                >
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Dictionaries Section */}
         <div className="mb-8">
