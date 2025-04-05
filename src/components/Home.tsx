@@ -269,6 +269,24 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
                         {LANGUAGE_MAP[dictionary.targetLanguage]?.code}
                       </span>
                     </Link>
+                    <button
+                      onClick={() => handleDeleteClick(dictionary.id)}
+                      className="text-sm text-red-400 hover:text-red-300"
+                    >
+                      <IonIcon icon={trashOutline} />
+                    </button>
+                  </div>
+                  <div
+                    className={`text-sm ${
+                      theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                    }`}
+                  >
+                    {dictionary.words.length}{' '}
+                    {dictionary.words.length === 1 ? 'palavra' : 'palavras'}
+                    <br />
+                    Última atualização:{' '}
+                    {dictionary.words[0]?.timestamp ||
+                      'Nenhuma palavra adicionada'}
                   </div>
                 </div>
               ))}
