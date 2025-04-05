@@ -136,7 +136,7 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
         {/* Dictionaries Section */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-[#4DE082]">
+            <h2 className="text-xl font-bold text-gray-200">
               Seus Dicionários
             </h2>
             <Link
@@ -205,7 +205,7 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
         {/* Recent Words Section */}
         {allWords.length > 0 && (
           <div>
-            <h2 className="text-xl font-bold text-[#4DE082] mb-6">
+            <h2 className="text-xl font-bold text-gray-200 mb-6">
               Palavras Recentes
             </h2>
             <div className="space-y-4">
@@ -231,9 +231,11 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
                             <span className="text-lg font-bold text-[#5AFF91]">
                               {word.word}
                             </span>
-                            <span className="text-sm text-gray-400">
-                              {dictionary.sourceLanguage.toUpperCase()} →{' '}
-                              {dictionary.targetLanguage.toUpperCase()}
+                            <span className="text-sm text-gray-400 flex items-center">
+                              {LANGUAGE_MAP[dictionary.sourceLanguage]?.flag}{' '}
+                              {LANGUAGE_MAP[dictionary.sourceLanguage]?.code} →{' '}
+                              {LANGUAGE_MAP[dictionary.targetLanguage]?.flag}{' '}
+                              {LANGUAGE_MAP[dictionary.targetLanguage]?.code}
                             </span>
                           </div>
                           <p className="text-gray-300">{word.translation}</p>
