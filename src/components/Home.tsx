@@ -169,12 +169,17 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
                   <div className="flex justify-between items-start mb-4">
                     <Link
                       to={`/dictionary/${dictionary.id}`}
-                      className="text-lg font-bold text-[#5AFF91] hover:text-[#4DE082]"
+                      className="text-lg font-bold text-[#5AFF91] hover:text-[#4DE082] flex items-center"
                     >
-                      {LANGUAGE_MAP[dictionary.sourceLanguage]?.flag}{' '}
-                      {LANGUAGE_MAP[dictionary.sourceLanguage]?.code} →{' '}
-                      {LANGUAGE_MAP[dictionary.targetLanguage]?.flag}{' '}
-                      {LANGUAGE_MAP[dictionary.targetLanguage]?.code}
+                      <span className="text-gray-200">
+                        {LANGUAGE_MAP[dictionary.sourceLanguage]?.flag}{' '}
+                        {LANGUAGE_MAP[dictionary.sourceLanguage]?.code}
+                      </span>
+                      <span className="text-gray-400 mx-1">→</span>
+                      <span className="text-gray-200">
+                        {LANGUAGE_MAP[dictionary.targetLanguage]?.flag}{' '}
+                        {LANGUAGE_MAP[dictionary.targetLanguage]?.code}
+                      </span>
                     </Link>
                     <button
                       onClick={() => handleDeleteClick(dictionary.id)}

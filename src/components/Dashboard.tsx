@@ -4,6 +4,22 @@ import { UserData, WordEntry } from '../types';
 import { trashOutline, addOutline, pencilOutline } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
 
+// Language mapping for flags and codes
+const LANGUAGE_MAP: Record<string, { code: string; flag: string }> = {
+  Português: { code: 'PT', flag: '🇧🇷' },
+  Inglês: { code: 'EN', flag: '🇬🇧' },
+  Espanhol: { code: 'ES', flag: '🇪🇸' },
+  Francês: { code: 'FR', flag: '🇫🇷' },
+  Alemão: { code: 'DE', flag: '🇩🇪' },
+  Italiano: { code: 'IT', flag: '🇮🇹' },
+  Japonês: { code: 'JP', flag: '🇯🇵' },
+  Coreano: { code: 'KR', flag: '🇰🇷' },
+  Chinês: { code: 'CN', flag: '🇨🇳' },
+  Russo: { code: 'RU', flag: '🇷🇺' },
+  Árabe: { code: 'AR', flag: '🇸🇦' },
+  Hindi: { code: 'HI', flag: '🇮🇳' },
+};
+
 interface DashboardProps {
   userData: UserData;
   onWordsUpdate: (dictionaryId: string, words: WordEntry[]) => void;
@@ -195,9 +211,16 @@ export default function Dashboard({
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-[#4DE082]">
-                {dictionary.sourceLanguage.toUpperCase()} →{' '}
-                {dictionary.targetLanguage.toUpperCase()}
+              <h1 className="text-2xl font-bold text-[#4DE082] flex items-center gap-2">
+                <span className="text-gray-200">
+                  {LANGUAGE_MAP[dictionary.sourceLanguage]?.flag}{' '}
+                  {dictionary.sourceLanguage}
+                </span>
+                <span className="text-gray-400">→</span>
+                <span className="text-gray-200">
+                  {LANGUAGE_MAP[dictionary.targetLanguage]?.flag}{' '}
+                  {dictionary.targetLanguage}
+                </span>
               </h1>
             </div>
             <div className="flex gap-3">
