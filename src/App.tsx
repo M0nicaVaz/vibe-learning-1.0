@@ -66,14 +66,24 @@ function App() {
   };
 
   const handleDictionaryCreate = (dictionary: Dictionary) => {
-    // Implementation of handleDictionaryCreate
+    if (!userData) return;
+    setUserData({
+      ...userData,
+      dictionaries: [...userData.dictionaries, dictionary],
+    });
   };
 
   const handleWordsUpdate = (
     dictionaryId: string,
     words: (typeof userData.dictionaries)[0]['words']
   ) => {
-    // Implementation of handleWordsUpdate
+    if (!userData) return;
+    setUserData({
+      ...userData,
+      dictionaries: userData.dictionaries.map((dict) =>
+        dict.id === dictionaryId ? { ...dict, words } : dict
+      ),
+    });
   };
 
   if (!userData) {

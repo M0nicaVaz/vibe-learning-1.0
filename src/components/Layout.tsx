@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { UserData } from '../types';
 import { useTheme } from '../context/ThemeContext';
-import { moonOutline, sunnyOutline, cardOutline } from 'ionicons/icons';
+import { moonOutline, sunnyOutline } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
 
 // Language mapping for flags and codes
@@ -78,49 +78,65 @@ export default function Layout({ userData, children }: LayoutProps) {
           </Link>
 
           <div className="mt-4 space-y-1">
-            {userData.dictionaries.map((dict) => {
-              const sourceInfo = LANGUAGE_MAP[dict.sourceLanguage];
-              const targetInfo = LANGUAGE_MAP[dict.targetLanguage];
-              return (
-                <div key={dict.id} className="space-y-1">
+            {userData.dictionaries.map((dict) => (
+              <div key={dict.id}>
+                <Link
+                  to={`/dictionary/${dict.id}`}
+                  className={`flex items-center px-4 py-2 rounded-md ${
+                    location.pathname === `/dictionary/${dict.id}` ||
+                    location.pathname === `/flashcards/${dict.id}`
+                      ? theme === 'dark'
+                        ? 'bg-teal-400 text-black font-medium'
+                        : 'bg-teal-600 text-white font-medium'
+                      : theme === 'dark'
+                      ? 'text-gray-300 hover:bg-gray-800'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <span
+                    className={`${
+                      theme === 'dark' ? 'text-gray-200' : 'text-gray-600'
+                    }`}
+                  >
+                    {LANGUAGE_MAP[dict.sourceLanguage]?.flag}{' '}
+                    {LANGUAGE_MAP[dict.sourceLanguage]?.code}
+                  </span>
+                  <span
+                    className={`${
+                      theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                    }`}
+                  >
+                    →
+                  </span>
+                  <span
+                    className={`${
+                      theme === 'dark' ? 'text-gray-200' : 'text-gray-600'
+                    }`}
+                  >
+                    {LANGUAGE_MAP[dict.targetLanguage]?.flag}{' '}
+                    {LANGUAGE_MAP[dict.targetLanguage]?.code}
+                  </span>
+                </Link>
+                {(location.pathname === `/dictionary/${dict.id}` ||
+                  location.pathname === `/flashcards/${dict.id}`) && (
                   <Link
-                    to={`/dictionary/${dict.id}`}
-                    className={`flex items-center px-4 py-2 rounded-md ${
-                      location.pathname === `/dictionary/${dict.id}`
+                    to={`/flashcards/${dict.id}`}
+                    className={`flex items-center px-4 py-2 ml-4 rounded-md ${
+                      location.pathname === `/flashcards/${dict.id}`
                         ? theme === 'dark'
-                          ? 'bg-teal-400 text-black font-medium'
-                          : 'bg-teal-600 text-white font-medium'
+                          ? 'text-teal-400 font-medium'
+                          : 'text-teal-600 font-medium'
                         : theme === 'dark'
                         ? 'text-gray-300 hover:bg-gray-800'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >
-                    <span>
-                      {sourceInfo?.flag} {sourceInfo?.code} → {targetInfo?.flag}{' '}
-                      {targetInfo?.code}
-                    </span>
+                    <span className="mr-2">📚</span>
+                    <span>Treinar palavras</span>
                   </Link>
-
-                  {location.pathname === `/dictionary/${dict.id}` && (
-                    <Link
-                      to={`/flashcards/${dict.id}`}
-                      className={`flex items-center px-4 py-2 ml-4 rounded-md ${
-                        location.pathname === `/flashcards/${dict.id}`
-                          ? theme === 'dark'
-                            ? 'bg-teal-400 text-black font-medium'
-                            : 'bg-teal-600 text-white font-medium'
-                          : theme === 'dark'
-                          ? 'text-gray-300 hover:bg-gray-800'
-                          : 'text-gray-600 hover:bg-gray-100'
-                      }`}
-                    >
-                      <IonIcon icon={cardOutline} className="mr-2" />
-                      <span>Flashcards</span>
-                    </Link>
-                  )}
-                </div>
-              );
-            })}
+                )}
+              </div>
+            ))}
           </div>
         </nav>
 
