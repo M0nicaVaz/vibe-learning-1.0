@@ -9,6 +9,7 @@ import {
 } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
 import { useState, useEffect } from 'react';
+import WordSelectionModal from './WordSelectionModal';
 
 // Language mapping for flags and codes
 const LANGUAGE_MAP: Record<string, { code: string; flag: string }> = {
@@ -36,6 +37,11 @@ export default function Layout({ userData, children }: LayoutProps) {
   const { theme, toggleTheme } = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [showWordSelectionModal, setShowWordSelectionModal] = useState(false);
+  const [selectedDictionary, setSelectedDictionary] = useState<{
+    id: string;
+    totalWords: number;
+  } | null>(null);
 
   // Check if the device is mobile or tablet
   useEffect(() => {
@@ -67,6 +73,11 @@ export default function Layout({ userData, children }: LayoutProps) {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleTrainWords = (dictionaryId: string, totalWords: number) => {
+    setSelectedDictionary({ id: dictionaryId, totalWords });
+    setShowWordSelectionModal(true);
   };
 
   return (
@@ -176,9 +187,9 @@ export default function Layout({ userData, children }: LayoutProps) {
                 </Link>
                 {(location.pathname === `/dictionary/${dict.id}` ||
                   location.pathname === `/flashcards/${dict.id}`) && (
-                  <Link
-                    to={`/flashcards/${dict.id}`}
-                    className={`flex items-center px-4 py-2 ml-4 rounded-md ${
+                  <button
+                    onClick={() => handleTrainWords(dict.id, dict.words.length)}
+                    className={`flex items-center px-4 py-2 ml-4 rounded-md w-full text-left ${
                       location.pathname === `/flashcards/${dict.id}`
                         ? theme === 'dark'
                           ? 'text-teal-400 font-medium'
@@ -190,7 +201,7 @@ export default function Layout({ userData, children }: LayoutProps) {
                   >
                     <span className="mr-2">📚</span>
                     <span>Treinar palavras</span>
-                  </Link>
+                  </button>
                 )}
               </div>
             ))}
@@ -234,6 +245,18 @@ export default function Layout({ userData, children }: LayoutProps) {
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto p-4 pt-16 lg:pt-4">{children}</div>
       </div>
+
+      {/* Word Selection Modal */}
+      {showWordSelectionModal && selectedDictionary && (
+        <WordSelectionModal
+          dictionaryId={selectedDictionary.id}
+          totalWords={selectedDictionary.totalWords}
+          onClose={() => {
+            setShowWordSelectionModal(false);
+            setSelectedDictionary(null);
+          }}
+        />
+      )}
     </div>
   );
 }
