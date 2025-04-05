@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useParams, Navigate, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, Navigate, useNavigate, Link } from 'react-router-dom';
 import { UserData, WordEntry } from '../types';
 import { trashOutline, addOutline, pencilOutline } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
@@ -42,6 +42,13 @@ interface DeleteWordDialogProps {
   word: WordEntry;
   onConfirm: () => void;
   onCancel: () => void;
+}
+
+interface DictionaryStats {
+  correctCount: number;
+  incorrectCount: number;
+  totalWords: number;
+  timestamp: string;
 }
 
 function DeleteDialog({ dictionary, onConfirm, onCancel }: DeleteDialogProps) {
@@ -164,10 +171,37 @@ export default function Dashboard({
     phonetics: '',
   });
   const { theme } = useTheme();
+  const [stats, setStats] = useState<Record<string, DictionaryStats>>({});
+
+  // Load stats from localStorage
+  useEffect(() => {
+    const loadedStats: Record<string, DictionaryStats> = {};
+
+    userData.dictionaries.forEach((dictionary) => {
+      const storedStats = localStorage.getItem(
+        `dictionary_stats_${dictionary.id}`
+      );
+      if (storedStats) {
+        loadedStats[dictionary.id] = JSON.parse(storedStats);
+      }
+    });
+
+    setStats(loadedStats);
+  }, [userData.dictionaries]);
 
   if (!dictionary) {
     return <Navigate to="/" replace />;
   }
+
+  // Format date to Brazilian Portuguese
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -348,6 +382,31 @@ export default function Dashboard({
                 </>
               )}
             </p>
+            {stats[dictionary.id] && (
+              <div className="mt-4 text-center">
+                <p
+                  className={`${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                  }`}
+                >
+                  Último treino: {formatDate(stats[dictionary.id].timestamp)}
+                </p>
+                <p
+                  className={`${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                  }`}
+                >
+                  Acertos:{' '}
+                  <span className="text-teal-400">
+                    {stats[dictionary.id].correctCount}
+                  </span>{' '}
+                  | Erros:{' '}
+                  <span className="text-red-400">
+                    {stats[dictionary.id].incorrectCount}
+                  </span>
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -645,6 +704,20 @@ export default function Dashboard({
             onCancel={handleDeleteCancel}
           />
         )}
+
+        <div className="mt-8">
+          <Link
+            to="/new-dictionary"
+            className={`px-4 py-2 rounded-md flex items-center ${
+              theme === 'dark'
+                ? 'bg-teal-400 text-black hover:bg-teal-500'
+                : 'bg-teal-600 text-white hover:bg-teal-700'
+            }`}
+          >
+            <IonIcon icon={addOutline} className="mr-2" />
+            Criar Novo Dicionário
+          </Link>
+        </div>
       </div>
     </div>
   );
