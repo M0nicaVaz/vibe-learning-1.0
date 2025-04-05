@@ -5,6 +5,7 @@ import {
   chevronBackOutline,
   chevronForwardOutline,
   refreshOutline,
+  checkmarkOutline,
 } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
 import { useTheme } from '../context/ThemeContext';
@@ -41,6 +42,10 @@ export default function Flashcard({ userData }: FlashcardProps) {
     sourceLanguage: string;
     targetLanguage: string;
   } | null>(null);
+  const [userAnswer, setUserAnswer] = useState('');
+  const [answerStatus, setAnswerStatus] = useState<
+    'correct' | 'incorrect' | null
+  >(null);
 
   useEffect(() => {
     const currentDictionary = userData.dictionaries.find((d) => d.id === id);
@@ -49,17 +54,17 @@ export default function Flashcard({ userData }: FlashcardProps) {
       setWords(currentDictionary.words);
       setCurrentIndex(0);
       setIsFlipped(false);
+      setUserAnswer('');
+      setAnswerStatus(null);
     }
   }, [id, userData.dictionaries]);
-
-  const handleFlip = () => {
-    setIsFlipped(!isFlipped);
-  };
 
   const handleNext = () => {
     if (currentIndex < words.length - 1) {
       setCurrentIndex(currentIndex + 1);
       setIsFlipped(false);
+      setUserAnswer('');
+      setAnswerStatus(null);
     }
   };
 
@@ -67,6 +72,8 @@ export default function Flashcard({ userData }: FlashcardProps) {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
       setIsFlipped(false);
+      setUserAnswer('');
+      setAnswerStatus(null);
     }
   };
 
@@ -75,6 +82,20 @@ export default function Flashcard({ userData }: FlashcardProps) {
     setWords(shuffled);
     setCurrentIndex(0);
     setIsFlipped(false);
+    setUserAnswer('');
+    setAnswerStatus(null);
+  };
+
+  const handleAnswerSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userAnswer.trim()) return;
+
+    const correctTranslation = words[currentIndex]?.translation || '';
+    const isCorrect =
+      userAnswer.trim().toLowerCase() === correctTranslation.toLowerCase();
+
+    setAnswerStatus(isCorrect ? 'correct' : 'incorrect');
+    setIsFlipped(true);
   };
 
   if (!dictionary) {
@@ -185,17 +206,17 @@ export default function Flashcard({ userData }: FlashcardProps) {
             </button>
           </div>
         ) : (
-          <div className="max-w-2xl w-full">
-            <div className={`flashcard ${isFlipped ? 'flipped' : ''}`}>
-              <div className="flashcard-inner">
+          <div className="max-w-2xl w-full mx-auto">
+            <div className={`flashcard ${isFlipped ? 'flipped' : ''} w-full`}>
+              <div className="flashcard-inner w-full">
                 <div
                   className={`flashcard-front ${
                     theme === 'dark'
                       ? 'bg-[#2a2a2a] text-white'
                       : 'bg-white text-gray-800'
-                  } shadow-lg`}
+                  } shadow-lg w-full`}
                 >
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center p-6">
                     <div className="text-4xl mb-4">
                       {dictionary &&
                         LANGUAGE_MAP[dictionary.targetLanguage]?.flag}
@@ -220,9 +241,9 @@ export default function Flashcard({ userData }: FlashcardProps) {
                     theme === 'dark'
                       ? 'bg-[#2a2a2a] text-white'
                       : 'bg-white text-gray-800'
-                  } shadow-lg`}
+                  } shadow-lg w-full`}
                 >
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center p-6">
                     <div className="text-4xl mb-4">
                       {dictionary &&
                         LANGUAGE_MAP[dictionary.sourceLanguage]?.flag}
@@ -234,6 +255,70 @@ export default function Flashcard({ userData }: FlashcardProps) {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Answer input form - moved outside the flashcard */}
+            <div className="mt-8">
+              <form onSubmit={handleAnswerSubmit} className="w-full">
+                <div className="flex flex-col items-center">
+                  <input
+                    type="text"
+                    value={userAnswer}
+                    onChange={(e) => setUserAnswer(e.target.value)}
+                    placeholder="Digite a tradução..."
+                    className={`w-full px-4 py-3 rounded-md mb-3 ${
+                      theme === 'dark'
+                        ? 'bg-[#212121] text-white border-gray-700'
+                        : 'bg-gray-50 text-gray-800 border-gray-200'
+                    } border focus:outline-none focus:ring-2 ${
+                      theme === 'dark'
+                        ? 'focus:ring-teal-400'
+                        : 'focus:ring-teal-500'
+                    } text-lg`}
+                  />
+                  <button
+                    type="submit"
+                    className={`px-6 py-3 rounded-md flex items-center text-lg font-medium ${
+                      theme === 'dark'
+                        ? 'bg-teal-400 text-black hover:bg-teal-500'
+                        : 'bg-teal-600 text-white hover:bg-teal-700'
+                    }`}
+                  >
+                    <IonIcon icon={checkmarkOutline} className="mr-2 text-xl" />
+                    Verificar resposta
+                  </button>
+                </div>
+              </form>
+
+              {/* Answer feedback */}
+              {answerStatus && (
+                <div
+                  className={`mt-4 p-4 rounded-md w-full text-center text-lg ${
+                    answerStatus === 'correct'
+                      ? theme === 'dark'
+                        ? 'bg-green-800 text-green-200'
+                        : 'bg-green-100 text-green-800'
+                      : theme === 'dark'
+                      ? 'bg-red-800 text-red-200'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {answerStatus === 'correct' ? (
+                    <p className="flex items-center justify-center">
+                      <span className="text-2xl mr-2">🎉</span> Parabéns! Você
+                      acertou! <span className="text-2xl ml-2">🎉</span>
+                    </p>
+                  ) : (
+                    <p className="flex flex-col items-center">
+                      <span className="text-2xl mb-2">😕</span>
+                      <span>Ops! A tradução correta é:</span>
+                      <span className="font-medium mt-1">
+                        {words[currentIndex]?.translation}
+                      </span>
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Navigation buttons */}
@@ -252,16 +337,6 @@ export default function Flashcard({ userData }: FlashcardProps) {
                 }`}
               >
                 <IonIcon icon={chevronBackOutline} className="text-2xl" />
-              </button>
-              <button
-                onClick={handleFlip}
-                className={`px-4 py-2 rounded-md ${
-                  theme === 'dark'
-                    ? 'bg-teal-400 text-black hover:bg-teal-500'
-                    : 'bg-teal-600 text-white hover:bg-teal-700'
-                }`}
-              >
-                {isFlipped ? 'Ver palavra' : 'Ver tradução'}
               </button>
               <button
                 onClick={handleNext}
