@@ -119,7 +119,7 @@ export default function WordSelectionModal({
             <button
               type="button"
               onClick={handleDecrement}
-              className={`w-12 h-12 flex items-center justify-center rounded-full ${
+              className={`w-12 h-12 flex items-center justify-center rounded-full cursor-pointer ${
                 theme === 'dark'
                   ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -157,7 +157,7 @@ export default function WordSelectionModal({
             <button
               type="button"
               onClick={handleIncrement}
-              className={`w-12 h-12 flex items-center justify-center rounded-full ${
+              className={`w-12 h-12 flex items-center justify-center rounded-full cursor-pointer ${
                 theme === 'dark'
                   ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -175,7 +175,7 @@ export default function WordSelectionModal({
         <div className="flex justify-end space-x-3">
           <button
             onClick={onClose}
-            className={`px-4 py-2 rounded-md ${
+            className={`px-4 py-2 rounded-md cursor-pointer ${
               theme === 'dark'
                 ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
@@ -185,7 +185,7 @@ export default function WordSelectionModal({
           </button>
           <button
             onClick={handleStartTraining}
-            className={`px-4 py-2 rounded-md ${
+            className={`px-4 py-2 rounded-md cursor-pointer ${
               theme === 'dark'
                 ? 'bg-teal-500 text-white hover:bg-teal-600'
                 : 'bg-teal-600 text-white hover:bg-teal-700'

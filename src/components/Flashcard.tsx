@@ -269,7 +269,7 @@ export default function Flashcard({ userData }: FlashcardProps) {
             </div>
             <button
               onClick={handleNext}
-              className={`w-full py-3 rounded-md ${
+              className={`w-full py-3 rounded-md cursor-pointer ${
                 theme === 'dark'
                   ? 'bg-teal-500 text-white hover:bg-teal-600'
                   : 'bg-teal-600 text-white hover:bg-teal-700'

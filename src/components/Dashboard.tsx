@@ -86,13 +86,13 @@ function DeleteDialog({ dictionary, onConfirm, onCancel }: DeleteDialogProps) {
         <div className="flex justify-end space-x-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+            className={`px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 cursor-pointer`}
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+            className={`px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 cursor-pointer`}
           >
             Excluir
           </button>
@@ -135,13 +135,13 @@ function DeleteWordDialog({
         <div className="flex justify-end space-x-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+            className={`px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 cursor-pointer`}
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+            className={`px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 cursor-pointer`}
           >
             Excluir
           </button>
@@ -331,7 +331,7 @@ export default function Dashboard({
                   theme === 'dark'
                     ? 'text-red-300 hover:text-red-400'
                     : 'text-red-300 hover:text-red-400'
-                } rounded-md focus:outline-none`}
+                } rounded-md focus:outline-none cursor-pointer`}
               >
                 <IonIcon icon={trashOutline} className="text-lg" />
               </button>
@@ -345,7 +345,7 @@ export default function Dashboard({
                   theme === 'dark'
                     ? 'focus:ring-teal-400'
                     : 'focus:ring-teal-500'
-                } font-medium flex items-center gap-2`}
+                } font-medium flex items-center gap-2 cursor-pointer`}
               >
                 <IonIcon icon={addOutline} className="text-lg" /> Nova Palavra
               </button>
@@ -524,7 +524,7 @@ export default function Dashboard({
                       theme === 'dark'
                         ? 'text-teal-400 hover:text-teal-500'
                         : 'text-teal-600 hover:text-teal-700'
-                    } p-2 text-sm`}
+                    } p-2 text-sm cursor-pointer`}
                   >
                     <IonIcon icon={pencilOutline} className="text-lg" />
                   </button>
@@ -534,7 +534,7 @@ export default function Dashboard({
                       theme === 'dark'
                         ? 'text-red-500 hover:text-red-400'
                         : 'text-red-500 hover:text-red-400'
-                    } p-2 text-sm`}
+                    } p-2 text-sm cursor-pointer`}
                   >
                     <IonIcon icon={trashOutline} className="text-lg" />
                   </button>
@@ -663,7 +663,7 @@ export default function Dashboard({
                       theme === 'dark'
                         ? 'focus:ring-gray-500'
                         : 'focus:ring-gray-400'
-                    } font-medium`}
+                    } cursor-pointer`}
                   >
                     Cancelar
                   </button>
@@ -677,7 +677,7 @@ export default function Dashboard({
                       theme === 'dark'
                         ? 'focus:ring-teal-400'
                         : 'focus:ring-teal-500'
-                    } font-medium`}
+                    } cursor-pointer`}
                   >
                     {editingWord ? 'Salvar' : 'Adicionar'}
                   </button>

@@ -82,13 +82,11 @@ export default function Welcome({ onUserDataSave }: WelcomeProps) {
 
             <button
               type="submit"
-              className={`w-full px-4 py-2 ${
+              className={`w-full py-3 rounded-md cursor-pointer ${
                 theme === 'dark'
-                  ? 'bg-teal-400 text-black hover:bg-teal-500'
+                  ? 'bg-teal-500 text-white hover:bg-teal-600'
                   : 'bg-teal-600 text-white hover:bg-teal-700'
-              } rounded-md focus:outline-none focus:ring-2 ${
-                theme === 'dark' ? 'focus:ring-teal-400' : 'focus:ring-teal-500'
-              } font-medium`}
+              }`}
             >
               Começar
             </button>

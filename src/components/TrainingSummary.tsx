@@ -141,7 +141,7 @@ export default function TrainingSummary({
           <div className="flex justify-center">
             <button
               onClick={() => navigate('/')}
-              className={`px-6 py-3 rounded-md flex items-center text-lg font-medium ${
+              className={`px-6 py-3 rounded-md flex items-center text-lg font-medium cursor-pointer ${
                 theme === 'dark'
                   ? 'bg-teal-400 text-black hover:bg-teal-500'
                   : 'bg-teal-600 text-white hover:bg-teal-700'

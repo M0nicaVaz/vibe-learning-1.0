@@ -72,13 +72,21 @@ function DeleteDialog({ dictionary, onConfirm, onCancel }: DeleteDialogProps) {
         <div className="flex justify-end space-x-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+            className={`px-4 py-2 rounded-md cursor-pointer ${
+              theme === 'dark'
+                ? 'bg-gray-700 text-white hover:bg-gray-600'
+                : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+            }`}
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+            className={`px-4 py-2 rounded-md cursor-pointer ${
+              theme === 'dark'
+                ? 'bg-red-500 text-white hover:bg-red-600'
+                : 'bg-red-600 text-white hover:bg-red-700'
+            }`}
           >
             Excluir
           </button>
@@ -271,9 +279,13 @@ export default function Home({ userData, onDictionaryDelete }: HomeProps) {
                     </Link>
                     <button
                       onClick={() => handleDeleteClick(dictionary.id)}
-                      className="text-sm text-red-400 hover:text-red-300"
+                      className={`p-2 rounded-md cursor-pointer ${
+                        theme === 'dark'
+                          ? 'text-red-400 hover:bg-red-900/30'
+                          : 'text-red-600 hover:bg-red-50'
+                      }`}
                     >
-                      <IonIcon icon={trashOutline} />
+                      <IonIcon icon={trashOutline} className="text-xl" />
                     </button>
                   </div>
                   <div
